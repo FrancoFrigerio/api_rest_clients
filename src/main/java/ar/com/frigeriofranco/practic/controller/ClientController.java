@@ -40,12 +40,8 @@ public class ClientController {
         return ResponseEntity.ok().body(clientService.findAllClients());
     }
 
-   /* @PostMapping("/client_bill")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> saveBill()*/
 
-
-    @PostMapping("/")
+    @PostMapping("/save")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<?>saveClient(@Valid @RequestBody ClientRequestDto clientRequestDto){
         return new ResponseEntity<>(clientService.saveClient(clientRequestDto), HttpStatus.CREATED);

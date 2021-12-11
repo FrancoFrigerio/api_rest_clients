@@ -56,21 +56,16 @@ public class UserController {
         return ResponseEntity.ok(userService.deleteById(id));
     }
 
-
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAnyRole('ROLE_BOSS','ROLE_ADMIN')")
     public ResponseEntity<?>updateUser(@RequestBody @Valid UserToUpdateDto userToUpdateDto, HttpServletRequest request,@PathVariable Long id){
         return ResponseEntity.ok(userService.updateUser(userToUpdateDto,request.getHeader(AUTHORIZATION),id));
     }
 
-
     @PostMapping("/role")
     @PreAuthorize("hasRole('ROLE_BOSS')")
     public ResponseEntity<?>saveRole(@RequestBody Role role){
         return new ResponseEntity<>(userService.saveRole(role),CREATED);
     }
-
-
-
 
 }

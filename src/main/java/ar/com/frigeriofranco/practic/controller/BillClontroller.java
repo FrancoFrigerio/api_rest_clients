@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.text.ParseException;
 
 @RestController
 @RequestMapping("/bill")
@@ -25,15 +26,11 @@ public class BillClontroller {
     BillService billService;
 
 
-    @GetMapping("/")
-    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-    public ResponseEntity<?>getAllBills(){
-        return ResponseEntity.ok(billService.findAllWithClient());
-    }
+
 
     @PostMapping("/dto")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-    public ResponseEntity<?>getDtos(@RequestBody PageRequestDto pageRequestDto, HttpServletRequest request){
+    public ResponseEntity<?>getDtos(@RequestBody PageRequestDto pageRequestDto, HttpServletRequest request)throws ParseException {
         return ResponseEntity.ok(billService.findAllPage(pageRequestDto,request));
     }
 
