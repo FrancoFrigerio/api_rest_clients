@@ -8,11 +8,15 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.AllArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 
@@ -35,6 +39,15 @@ public class UtilJWT {
        return JWT.require(getAlgorithm()).build();
     }
 
+    public String generateToken(User user){
+            Algorithm algorithm = getAlgorithm();
+            String accesToken = JWT.create()
+                    .withSubject(user.getUsername())
+                    .withExpiresAt(new Date(System.currentTimeMillis()+20*80*2000))
+                    .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                    .sign(algorithm);
+        return accesToken;
+    }
 
 
     public DecodedJWT verifyInfo(String authorizationHeader){
