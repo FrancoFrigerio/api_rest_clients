@@ -81,12 +81,6 @@ public class ValidationHandleController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(payload,HttpStatus.BAD_REQUEST);
     }
 
-   /* @ExceptionHandler({ar.com.frigeriofranco.practic.exceptions.AccessDeniedException.class})
-    public ResponseEntity<?>accesDenied(AccessDeniedException e){
-        PayLoadException payLoadException = new PayLoadException(e.getMessage(),HttpStatus.FORBIDDEN,new Date());
-        return new ResponseEntity<>(payLoadException,FORBIDDEN);
-    }*/
-
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
