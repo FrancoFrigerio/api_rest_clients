@@ -15,8 +15,8 @@ import java.util.Set;
 @NoArgsConstructor
 public class UserRequestDto {
 
+    @Size(min = 2, max = 20, message = "The name field must be between 2 and 20 characters long")
     @NotEmpty
-    @Size(min = 2, max = 10, message = "The name field must be between 2 and 10 characters long")
     private String name;
 
     @NotEmpty(message = "The field surname cannot be empty")
@@ -30,9 +30,7 @@ public class UserRequestDto {
     @Size(min = 8, max = 20 ,message = "password size must be from 8 to 20 characters")
     @NotEmpty(message = "The field password cannot be empty")
     private String password;
-    /*@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$",
-            message = "The password must have: " +
-                        "*At least one lower case, *At least one upper case, *At least one number")*/
+
 
     @NotEmpty(message = "The roles can´t be empty")
     private Set<String> roles = new HashSet<>();

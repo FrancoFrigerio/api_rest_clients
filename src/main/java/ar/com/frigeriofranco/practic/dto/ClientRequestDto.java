@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -15,25 +16,25 @@ import java.util.Date;
 @NoArgsConstructor
 public class ClientRequestDto {
 
-    @NotNull
+    @NotBlank(message = "The name cannot be empty")
     private String name;
 
-    @NotNull
+    @NotBlank(message = "The surname cannot be empty")
     private String surname;
 
-    @NotNull
+    @NotBlank(message = "The email cannot be empty")
     @Email
     private String email;
 
-    @NotNull
+    @NotBlank(message = "The dress cannot be empty")
     private String dress;
 
-    @NotNull
+    @NotBlank(message = "The document cannot be empty")
     private String doc;
 
-    @NotNull
+    @NotBlank(message = "The phone cannot be empty")
     private String phone;
 
-    @DateTimeFormat(pattern = "dd/MM/yyy")
+    //@DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date date_birth;
 }
