@@ -20,8 +20,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //@Size(min = 2, max = 20, message = "The name field must be between 2 and 10 characters long")
     @NotEmpty
-    @Size(min = 2, max = 10, message = "The name field must be between 2 and 10 characters long")
     private String name;
 
     @NotEmpty(message = "The field surname cannot be empty")
@@ -32,6 +32,7 @@ public class User {
     @Email(message = "The username must be an email account ")
     private String username;
 
+    //@Size(min = 8, max = 20, message = "The name field must be between 8 and 20 characters long")
     @NotEmpty(message = "The field password cannot be empty")
     private String password;
 

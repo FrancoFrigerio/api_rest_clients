@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -24,23 +25,23 @@ public abstract class Person {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
+    @NotBlank(message = "The name cannot be empty")
     private String name;
 
-    @NotNull
+    @NotBlank(message = "The surname cannot be empty")
     private String surname;
 
-    @NotNull
+    @NotBlank(message = "The email cannot be empty")
     @Email
     private String email;
 
-    @NotNull
+    @NotBlank(message = "The dress cannot be empty")
     private String dress;
 
-    @NotNull
+    @NotBlank(message = "The docuement cannot be empty")
     private String doc;
 
-    @NotNull
+    @NotBlank(message = "The name cannot be empty")
     private String phone;
 
     @DateTimeFormat(pattern = "dd/MM/yyy")

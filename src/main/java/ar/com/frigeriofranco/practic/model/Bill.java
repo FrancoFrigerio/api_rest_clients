@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 @Data
@@ -22,18 +24,18 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
+    @NotBlank(message = "You must indicate the date")
     private Date created_At;
 
-    @NotNull
+    @NotNull(message = "The total is required")
     private Double total;
 
-
-    @NotNull
+    @NotBlank(message = "You most to provide the description")
     private String description;
 
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = "bills")
     private Client cliente;
+
 }

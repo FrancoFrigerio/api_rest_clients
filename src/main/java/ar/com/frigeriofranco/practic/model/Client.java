@@ -28,10 +28,7 @@ import java.util.Set;
 public class Client extends Person{
 
 
-    private String sold;
 
-
-   /**/
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinTable(name = "clients_bills",
