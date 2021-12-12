@@ -4,12 +4,15 @@ package ar.com.frigeriofranco.practic.service.impl;
 import ar.com.frigeriofranco.practic.dto.ClientListRespDto;
 import ar.com.frigeriofranco.practic.dto.ClientRequestDto;
 import ar.com.frigeriofranco.practic.dto.ClientResponseDto;
+import ar.com.frigeriofranco.practic.exceptions.ElementNotFound;
 import ar.com.frigeriofranco.practic.model.Client;
 import ar.com.frigeriofranco.practic.repository.ClientRepository;
 import ar.com.frigeriofranco.practic.service.ClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -24,13 +27,22 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     private ModelMapper mapper;
 
+
+    @Value("error.item.provided.not.found")
+    private String elementNotFound;
+
+    @Value("message.successfully.item.removed")
+    private String elementSuccessfullyDeleted;
+
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public ClientResponseDto findById(Long id) {
         Client client = clientRepository.findById(id).orElseThrow();
         Double saldo = clientRepository.sumBills(id);
         ClientResponseDto clientResponse = mapper.map(client,ClientResponseDto.class);
             clientResponse.setSaldo(saldo);
-
         return clientResponse;
     }
 
@@ -56,9 +68,12 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Map<String, Object> deleteById(Long id) {
+        if(clientRepository.findById(id).isEmpty()){
+            throw new NoSuchElementException(messageSource.getMessage(elementNotFound,null,Locale.getDefault()));
+        }
         clientRepository.deleteById(id);
         Map<String,Object> body = new HashMap<>();
-        body.put("message","Element was successfully deleted");
+        body.put("message",messageSource.getMessage(elementSuccessfullyDeleted,null,Locale.getDefault() ));
         body.put("date", new Date());
         return body;
     }

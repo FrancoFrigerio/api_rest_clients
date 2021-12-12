@@ -5,13 +5,14 @@ import ar.com.frigeriofranco.practic.dto.*;
 import org.springframework.data.domain.Pageable;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.util.List;
 
 public interface BillService {
 
-    public List<BillListDto> findAllWithClient();
+    public List<BillListDto> findAllWithClient(String desde,String hasta);
 
-     PageDto<BillListDto> findAllPage(PageRequestDto pageRequestDto,HttpServletRequest request);
+    PageDto<BillListDto> findAllPage(PageRequestDto pageRequestDto,HttpServletRequest request) throws ParseException;
 
     public BillResponseDto saveBill(BillRequestDto billRequestDto, Long id);
 }

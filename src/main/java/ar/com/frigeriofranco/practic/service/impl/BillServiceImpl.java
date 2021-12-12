@@ -7,7 +7,6 @@ import ar.com.frigeriofranco.practic.repository.BillRepository;
 import ar.com.frigeriofranco.practic.repository.ClientRepository;
 import ar.com.frigeriofranco.practic.service.BillService;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.criterion.Order;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +17,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.util.*;
+
+
 
 @Service
 @Slf4j
@@ -33,13 +35,10 @@ public class BillServiceImpl implements BillService {
     @Autowired
     ModelMapper mapper;
 
-
-
-
     @Override
-    public List<BillListDto> findAllWithClient() {
+    public List<BillListDto> findAllWithClient(String desde,String hasta) {
         List<BillListDto> billsDtos = new ArrayList<>();
-            billRepository.fetchAllWithClient().forEach(bill -> {
+            billRepository.fetchAllWithClient(desde,hasta).forEach(bill -> {
             ClientListRespDto clientDto = mapper.map(bill.getCliente(),ClientListRespDto.class);
             BillListDto billDto = mapper.map(bill,BillListDto.class);
             billDto.setClient(clientDto);
@@ -49,12 +48,10 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public PageDto<BillListDto> findAllPage(PageRequestDto pageRequestDto,HttpServletRequest request) {
-
-
-
+    public PageDto<BillListDto> findAllPage(PageRequestDto pageRequestDto,HttpServletRequest request) throws ParseException {
       PageDto<BillListDto> datos = new PageDto<>();
       List<BillListDto> listado = new ArrayList<>();
+
       Map<String, Object> links = new HashMap<>();
       Pageable page;
       if(pageRequestDto.getOrder().equalsIgnoreCase("desc")){
@@ -62,19 +59,18 @@ public class BillServiceImpl implements BillService {
       }else{
            page = PageRequest.of(pageRequestDto.getPage(),pageRequestDto.getSizePage() ,Sort.by(pageRequestDto.getSort()).ascending());
       }
-      Page<Bill> pageList = billRepository.findAll(page);
+      Page<Bill> pageList = billRepository.findAll(page,pageRequestDto.getDesde(),pageRequestDto.getHasta());
+
       pageList.forEach(element->{
           ClientListRespDto clientDto = mapper.map(element.getCliente(),ClientListRespDto.class);
           BillListDto billDto = mapper.map(element,BillListDto.class);
           billDto.setClient(clientDto);
           listado.add(billDto);
       });
-
-      links.put("next",pageList.hasNext()?(page.getPageNumber()+1):null);
+      links.put("next_page",pageList.hasNext()?(page.getPageNumber()+1):null);
       links.put("previous",pageList.hasPrevious()?(page.getPageNumber()-1):null);
       links.put("last_page",pageList.getTotalPages()-1);
       links.put("total_elements",pageList.getTotalElements());
-
 
       datos.setContent(listado);
       datos.setUtils(links);
@@ -87,19 +83,9 @@ public class BillServiceImpl implements BillService {
     public BillResponseDto saveBill(BillRequestDto billRequestDto, Long id) {
         Client client = clientRepository.getById(id);
         Bill billToSave = mapper.map(billRequestDto,Bill.class);
-        log.info("client-->"+ client.getBills().size());
         client.getBills().add(billToSave);
-        log.info("client-->"+ client.getBills().size());
-
-
         billToSave.setCliente(client);
-
-       //clientRepository.save(client);
-        //billRepository.save(mapper.map(billRequestDto, Bill.class));
         return mapper.map(billRepository.save(billToSave),BillResponseDto.class);
     }
 
-    private String makePaginationLink(HttpServletRequest request, int page) {
-        return String.format("%s?page=%d", request.getRequestURI(), page);
-    }
 }
