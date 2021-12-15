@@ -83,6 +83,7 @@ public class BillServiceImpl implements BillService {
     public BillResponseDto saveBill(BillRequestDto billRequestDto, Long id) {
         Client client = clientRepository.getById(id);
         Bill billToSave = mapper.map(billRequestDto,Bill.class);
+        log.info("entra en el service");
         client.getBills().add(billToSave);
         billToSave.setCliente(client);
         return mapper.map(billRepository.save(billToSave),BillResponseDto.class);

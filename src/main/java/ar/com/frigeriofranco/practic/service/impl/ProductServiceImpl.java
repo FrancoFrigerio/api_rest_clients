@@ -61,4 +61,9 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll();
     }
 
+    @Override
+    public List<Product> getProductsLike(String name) {
+        return productRepository.getProductLike(name);
+    }
+
 }
