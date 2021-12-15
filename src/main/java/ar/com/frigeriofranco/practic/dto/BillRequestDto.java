@@ -15,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class BillRequestDto {
 
-    @NotBlank(message = "You must indicate the date")
+    @NotNull(message = "You must indicate the date")
     private Date created_At;
 
     @NotNull(message = "The total is required")
