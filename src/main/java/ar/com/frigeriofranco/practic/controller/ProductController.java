@@ -46,4 +46,10 @@ public class ProductController {
         return ResponseEntity.ok().body(productService.findById(id));
     }
 
+    @GetMapping("/like/{name}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
+    public ResponseEntity<?>getProductsLike(@PathVariable(name = "name")String name){
+        return ResponseEntity.ok().body(productService.getProductsLike(name));
+    }
+
 }
