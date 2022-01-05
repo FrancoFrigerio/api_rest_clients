@@ -10,7 +10,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -33,7 +35,9 @@ public class Bill {
     @NotBlank(message = "You most to provide the description")
     private String description;
 
-
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(name = "bill_id")
+    List<Item> itemsProducts;
 
 
     @ManyToOne(fetch = FetchType.EAGER)
