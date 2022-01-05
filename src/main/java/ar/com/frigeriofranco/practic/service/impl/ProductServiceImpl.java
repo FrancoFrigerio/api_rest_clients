@@ -2,6 +2,7 @@ package ar.com.frigeriofranco.practic.service.impl;
 
 
 import ar.com.frigeriofranco.practic.dto.ProductRequestDto;
+import ar.com.frigeriofranco.practic.dto.ProductResponseDto;
 import ar.com.frigeriofranco.practic.model.Product;
 import ar.com.frigeriofranco.practic.repository.ProductRepository;
 import ar.com.frigeriofranco.practic.service.AWSService;
@@ -16,6 +17,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -57,13 +59,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductResponseDto> getAllProducts() {
+       List<ProductResponseDto> listDtos = new ArrayList<>();
+        productRepository.findAll().forEach(element ->{
+            listDtos.add(mapper.map(element,ProductResponseDto.class));
+        });
+        return listDtos;
     }
 
     @Override
-    public List<Product> getProductsLike(String name) {
-        return productRepository.getProductLike(name);
+    public List<ProductResponseDto> getProductsLike(String name) {
+        List<ProductResponseDto> listDtos = new ArrayList<>();
+        productRepository.getProductLike(name).forEach(element ->{
+            listDtos.add(mapper.map(element,ProductResponseDto.class));
+        });
+        return listDtos;
+
+
     }
 
 }

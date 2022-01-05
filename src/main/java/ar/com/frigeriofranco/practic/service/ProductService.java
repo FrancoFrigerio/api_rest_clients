@@ -1,5 +1,6 @@
 package ar.com.frigeriofranco.practic.service;
 
+import ar.com.frigeriofranco.practic.dto.ProductResponseDto;
 import ar.com.frigeriofranco.practic.model.Product;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +14,7 @@ public interface ProductService {
 
     Product saveProduct(String name, String price, String created_At, MultipartFile file1, MultipartFile file2) throws IOException, ParseException;
 
-    List<Product> getAllProducts();
+    List<ProductResponseDto> getAllProducts();
 
-    List<Product> getProductsLike(String name);
+    List<ProductResponseDto> getProductsLike(String name);
 }
