@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.sql.SQLException;
 import java.text.ParseException;
 
 @RestController
@@ -25,8 +26,11 @@ public class BillClontroller {
     @Autowired
     BillService billService;
 
-
-
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<?>getBillWithUserAndItems(@PathVariable(name = "id")Long id){
+        return ResponseEntity.ok().body(billService.getBillWithUserAndItems(id));
+    }
 
     @PostMapping("/dto")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
