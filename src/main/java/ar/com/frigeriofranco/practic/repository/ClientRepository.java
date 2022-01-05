@@ -18,6 +18,6 @@ public interface ClientRepository extends JpaRepository<Client,Long> {
     List<Client> getMetrics ();
 
     @Query(value = "select sum(b.total) from clients c inner join bills b on b.cliente_id = c.id where c.id =?1",nativeQuery = true)
-    Double getSaldo(Long id);
+    Double getTotal(Long id);
 
 }
