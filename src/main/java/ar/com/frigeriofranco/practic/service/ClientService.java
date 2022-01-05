@@ -2,6 +2,7 @@ package ar.com.frigeriofranco.practic.service;
 
 
 import ar.com.frigeriofranco.practic.dto.ClientListRespDto;
+import ar.com.frigeriofranco.practic.dto.ClientMetricsDto;
 import ar.com.frigeriofranco.practic.dto.ClientRequestDto;
 import ar.com.frigeriofranco.practic.dto.ClientResponseDto;
 import ar.com.frigeriofranco.practic.model.Client;
@@ -20,4 +21,6 @@ public interface ClientService {
     Client getById(Long id);
 
     Map<String,Object> deleteById(Long id);
+
+    List<ClientMetricsDto> getMetrics();
 }

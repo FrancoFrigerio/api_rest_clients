@@ -2,6 +2,7 @@ package ar.com.frigeriofranco.practic.service.impl;
 
 
 import ar.com.frigeriofranco.practic.dto.ClientListRespDto;
+import ar.com.frigeriofranco.practic.dto.ClientMetricsDto;
 import ar.com.frigeriofranco.practic.dto.ClientRequestDto;
 import ar.com.frigeriofranco.practic.dto.ClientResponseDto;
 import ar.com.frigeriofranco.practic.exceptions.ElementNotFound;
@@ -76,5 +77,18 @@ public class ClientServiceImpl implements ClientService {
         body.put("message",messageSource.getMessage(elementSuccessfullyDeleted,null,Locale.getDefault() ));
         body.put("date", new Date());
         return body;
+    }
+
+    @Override
+    public List<ClientMetricsDto> getMetrics() {
+        log.info("esta vacio?" + clientRepository.getMetrics().isEmpty());
+        List<ClientMetricsDto> listClientsMetrics = new ArrayList<>();
+        clientRepository.getMetrics().forEach(element ->{
+            log.info("total " + mapper.map(element,ClientMetricsDto.class));
+            ClientMetricsDto clientMetricsDto = mapper.map(element,ClientMetricsDto.class);
+            clientMetricsDto.setTotal(clientRepository.getTotal(clientMetricsDto.getId()));
+            listClientsMetrics.add(clientMetricsDto);
+        });
+        return listClientsMetrics;
     }
 }
