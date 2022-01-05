@@ -3,9 +3,12 @@ package ar.com.frigeriofranco.practic.service.impl;
 import ar.com.frigeriofranco.practic.dto.*;
 import ar.com.frigeriofranco.practic.model.Bill;
 import ar.com.frigeriofranco.practic.model.Client;
+import ar.com.frigeriofranco.practic.model.Item;
 import ar.com.frigeriofranco.practic.repository.BillRepository;
 import ar.com.frigeriofranco.practic.repository.ClientRepository;
+import ar.com.frigeriofranco.practic.repository.ProductRepository;
 import ar.com.frigeriofranco.practic.service.BillService;
+import ar.com.frigeriofranco.practic.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
 
@@ -31,6 +35,9 @@ public class BillServiceImpl implements BillService {
 
     @Autowired
     ClientRepository clientRepository;
+
+    @Autowired
+    ProductRepository productRepository;
 
     @Autowired
     ModelMapper mapper;
@@ -83,10 +90,24 @@ public class BillServiceImpl implements BillService {
     public BillResponseDto saveBill(BillRequestDto billRequestDto, Long id) {
         Client client = clientRepository.getById(id);
         Bill billToSave = mapper.map(billRequestDto,Bill.class);
-        log.info("entra en el service");
+        billToSave.setItemsProducts(new ArrayList<>());
+        billRequestDto.getItemsProducts().forEach(product ->{
+            Item i = new Item();
+            i.setProduct(productRepository.getById(product.getProductID()));
+            i.setCount(product.getProductCount());
+            billToSave.getItemsProducts().add(i);
+        });
         client.getBills().add(billToSave);
         billToSave.setCliente(client);
         return mapper.map(billRepository.save(billToSave),BillResponseDto.class);
+    }
+
+    @Override
+    public BillUniqueDto getBillWithUserAndItems(Long id) {
+        Bill bill = billRepository.getById(id);
+        BillUniqueDto billDto = mapper.map(bill,BillUniqueDto.class);
+        billDto.setClient(mapper.map(bill.getCliente(),ClientListRespDto.class));
+        return billDto;
     }
 
 }
