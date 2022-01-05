@@ -47,4 +47,10 @@ public class ClientController {
         return new ResponseEntity<>(clientService.saveClient(clientRequestDto), HttpStatus.CREATED);
     }
 
+    @GetMapping("/clientsMetrics")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<?>getMetrics(){
+        return new ResponseEntity<>(clientService.getMetrics(),HttpStatus.OK);
+    }
+
 }
