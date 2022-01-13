@@ -1,11 +1,7 @@
 package ar.com.frigeriofranco.practic.service.impl;
 
 
-import ar.com.frigeriofranco.practic.dto.ClientListRespDto;
-import ar.com.frigeriofranco.practic.dto.ClientMetricsDto;
-import ar.com.frigeriofranco.practic.dto.ClientRequestDto;
-import ar.com.frigeriofranco.practic.dto.ClientResponseDto;
-import ar.com.frigeriofranco.practic.exceptions.ElementNotFound;
+import ar.com.frigeriofranco.practic.dto.*;
 import ar.com.frigeriofranco.practic.model.Client;
 import ar.com.frigeriofranco.practic.repository.ClientRepository;
 import ar.com.frigeriofranco.practic.service.ClientService;
@@ -14,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.data.geo.Metric;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -34,6 +31,12 @@ public class ClientServiceImpl implements ClientService {
 
     @Value("message.successfully.item.removed")
     private String elementSuccessfullyDeleted;
+
+    @Value("message.clients.with.more.expenses")
+    private String messageExpenses;
+
+    @Value("message.clients.with.more.bills")
+    private String messageBills;
 
     @Autowired
     private MessageSource messageSource;
@@ -90,5 +93,45 @@ public class ClientServiceImpl implements ClientService {
             listClientsMetrics.add(clientMetricsDto);
         });
         return listClientsMetrics;
+    }
+
+    @Override
+    public Map<String, List<ClientMetricsDto>> getAllMetrics() {
+       Map<String,List<ClientMetricsDto>> resp = new HashMap<>();
+        List<ClientMetricsDto> listMostExpenses = new ArrayList<>();
+        List<ClientMetricsDto> listMoreTimesBought = new ArrayList<>();
+
+        clientRepository.getMetrics().forEach(element ->{
+            ClientMetricsDto clientMetricsDto = mapper.map(element,ClientMetricsDto.class);
+            clientMetricsDto.setTotal(clientRepository.getTotal(clientMetricsDto.getId()));
+            listMostExpenses.add(clientMetricsDto);
+        });
+
+        clientRepository.getMetrics2().forEach(element ->{
+            ClientMetricsDto clientMetricsDto = mapper.map(element,ClientMetricsDto.class);
+            clientMetricsDto.setTotal(clientRepository.getNumberOfBills(clientMetricsDto.getId()));
+            listMoreTimesBought.add(clientMetricsDto);
+        });
+        resp.put(messageSource.getMessage(messageExpenses,null,Locale.getDefault()),listMostExpenses);
+        resp.put(messageSource.getMessage(messageBills,null,Locale.getDefault()),listMoreTimesBought);
+
+        return resp;
+    }
+
+    @Override
+    public Map<String, List<MetricsResponseDto>> getMetricsByDate() {
+       Map<String,List<MetricsResponseDto>> resp = new HashMap<>();
+       List<MetricsResponseDto> listMetrics = new ArrayList<>();
+
+        clientRepository.getMetricsByDate().forEach(element ->{
+           MetricsResponseDto metric = new MetricsResponseDto();
+           metric.setTotal(element.get(0));
+           metric.setCount((int) Math.round(element.get(1)));
+           metric.setMonth((int) Math.round(element.get(2)));
+           metric.setYear((int) Math.round(element.get(3)));
+           listMetrics.add(metric);
+         });
+       resp.put("data",listMetrics);
+        return resp;
     }
 }
