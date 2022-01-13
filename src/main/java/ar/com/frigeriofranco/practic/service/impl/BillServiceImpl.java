@@ -8,7 +8,6 @@ import ar.com.frigeriofranco.practic.repository.BillRepository;
 import ar.com.frigeriofranco.practic.repository.ClientRepository;
 import ar.com.frigeriofranco.practic.repository.ProductRepository;
 import ar.com.frigeriofranco.practic.service.BillService;
-import ar.com.frigeriofranco.practic.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
 
