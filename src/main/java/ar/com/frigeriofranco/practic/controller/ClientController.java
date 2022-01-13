@@ -50,7 +50,13 @@ public class ClientController {
     @GetMapping("/clientsMetrics")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<?>getMetrics(){
-        return new ResponseEntity<>(clientService.getMetrics(),HttpStatus.OK);
+        return new ResponseEntity<>(clientService.getAllMetrics(),HttpStatus.OK);
+    }
+
+    @GetMapping("/dateMetrics")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<?>getMetricsByDte(){
+        return new ResponseEntity<>(clientService.getMetricsByDate(),HttpStatus.OK);
     }
 
 }
