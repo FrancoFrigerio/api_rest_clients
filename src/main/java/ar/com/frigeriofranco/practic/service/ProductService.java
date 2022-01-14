@@ -1,6 +1,7 @@
 package ar.com.frigeriofranco.practic.service;
 
 import ar.com.frigeriofranco.practic.dto.ProductResponseDto;
+import ar.com.frigeriofranco.practic.dto.ProductsMetricsResponseDto;
 import ar.com.frigeriofranco.practic.model.Product;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,4 +18,6 @@ public interface ProductService {
     List<ProductResponseDto> getAllProducts();
 
     List<ProductResponseDto> getProductsLike(String name);
+
+    List<ProductsMetricsResponseDto> getProductsMetrics();
 }

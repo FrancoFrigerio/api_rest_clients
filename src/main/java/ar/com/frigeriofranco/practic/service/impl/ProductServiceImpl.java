@@ -3,6 +3,7 @@ package ar.com.frigeriofranco.practic.service.impl;
 
 import ar.com.frigeriofranco.practic.dto.ProductRequestDto;
 import ar.com.frigeriofranco.practic.dto.ProductResponseDto;
+import ar.com.frigeriofranco.practic.dto.ProductsMetricsResponseDto;
 import ar.com.frigeriofranco.practic.model.Product;
 import ar.com.frigeriofranco.practic.repository.ProductRepository;
 import ar.com.frigeriofranco.practic.service.AWSService;
@@ -76,6 +77,19 @@ public class ProductServiceImpl implements ProductService {
         return listDtos;
 
 
+    }
+
+    @Override
+    public List<ProductsMetricsResponseDto> getProductsMetrics() {
+       List<ProductsMetricsResponseDto> listProductsMetrics = new ArrayList<>();
+        productRepository.getMetrics().forEach(element ->{
+           ProductsMetricsResponseDto aux = new ProductsMetricsResponseDto();
+           aux.setIdProduct(Long.parseLong(element.get(0)));
+           aux.setNameProduct(element.get(1));
+           aux.setCountProduct(Integer.parseInt(element.get(2)));
+           listProductsMetrics.add(aux);
+       });
+        return listProductsMetrics;
     }
 
 }
