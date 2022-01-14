@@ -52,4 +52,10 @@ public class ProductController {
         return ResponseEntity.ok().body(productService.getProductsLike(name));
     }
 
+    @GetMapping("/productsMetrics")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
+    public ResponseEntity<?>getProductsMetrics(){
+        return ResponseEntity.ok().body(productService.getProductsMetrics());
+    }
+
 }
